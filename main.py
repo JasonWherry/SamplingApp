@@ -1,5 +1,5 @@
 """
-Author: Jason Wherry	Date: 5/08/2020		To Run: python3 main.py
+Author: Jason Wherry	Start Date: 5/08/2020		To Run: python3 main.py
 """
 
 import numpy as np
@@ -12,42 +12,56 @@ import matplotlib.pyplot as plt
 population = 3200
 
 case_sizes = [1, 40, 80, 160, 320, 640]
-cases = input('Choose the # of cases – 1  40  80  160  320  640: ')
+cases = input('Choose the number of sample(s) – 1  40  80  160  320  640: ')
 cases = int(cases)
 
 while cases not in case_sizes:
 	print(cases, 'is an invalid option')
-	cases = input('Choose the sample size – 1  40  80  160  320  640: ')
+	cases = input('Choose the number of sample(s) – 1  40  80  160  320  640: ')
 	cases = int(cases)
 
-print('cases, K =', cases, 'samples')
 samples = int(population / cases)
-
-print('Sample,  N =', samples)
 print('\n')
-
 
 # empty data frame to hold the data; each column is a case
 df = pd.DataFrame(data=None)
 
-# fill the DataFrame with data; [samples X cases]
+# fill the DataFrame with data
+# df.shape = [samples X cases]
 # each column is a sample case with the number of values equal to the ratio (population/cases)
 for i in range(0, cases):
 	temp = pd.Series(np.random.uniform(0, 1.0, samples))
 	col_name = 'Case ' + str(i+1)
 	df.insert(i, col_name, temp)
 
+print(df, '\n')
 
-print(df)
-print('\n')
-# print(df.iloc[0,0])
-# print(df.iloc[0,1])
 
-mean = df.iloc[0:, 0].mean()
-print('mean', mean)
-print('\n')
-std_dev = df.iloc[0:, 0].std()
-print('std_dev', std_dev)
+"""
+ find_mean(data_frame)
+ 	- objective:		determine the mean of the chosen sample(s)
+	- parameter:	 	pandas DataFrame
+	- return:			none
+"""
+def find_mean(data_frame):
+	sample_num = len(df.columns)
+	sample_size = len(df)
+
+	print('number of sample(s):\t', sample_num, '\nsize of each sample:\t', sample_size)
+	print('\n')
+	
+	# loop through each sample and find the mean?
+	for i in range(0, sample_num):
+		mean = round( df.iloc[0:, i].mean(), 3)
+		std_dev = round( df.iloc[0:, i].std(), 3)
+		print('sample number', i+1, '\tmean', mean, '\tstd. deviation', std_dev)
+
+find_mean(df)
+
+
+
+# Visualize (plot) the chosen sample's mean
+'''
 low_bound = 0
 high_bound = 1
 
@@ -73,3 +87,4 @@ ax.set_title('Normal Gaussian Curve')
 
 plt.savefig('normal_curve.png', dpi=72, bbox_inches='tight')
 plt.show()
+'''
