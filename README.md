@@ -8,3 +8,9 @@
 
 - Random sampling is accomplished when one selects a case from the population to be part of the sample that will be used. If the sampling is truly random, then **“every case in the population must have an equal chance of being selected”**. When this is actually done, statistics can show that the average performance of the randomly sampled group is an **“unbiased” estimate** of what the average performance of the population would be. This isn’t meant to suggest that the average performance of a randomly drawn sample will be exactly the same as the populations average performance, but if we continue measuring different random samples, the average performance of each sample may vary, but the average of those sample averages will keep getting closer and closer to the actual average of the population. Further, the extent of variation among those average sample performances can be used to obtain an unbiased estimate of the extent of variance in performance of the entire population.
 &nbsp;
+
+***
+
+- The next stop is to visualize (plot) the chosen sample's mean. Below is a suggestion as to what it could look like.
+
+![visual](plot_visual.png)
