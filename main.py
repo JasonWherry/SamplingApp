@@ -1,90 +1,130 @@
 """
 Author: Jason Wherry	Start Date: 5/08/2020		To Run: python3 main.py
+
+What am I actually plotting?
+
 """
 
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from scipy.stats import norm
 import seaborn as sb
 import matplotlib.pyplot as plt
+from statistics import stdev
 
-population = 3200
 
-case_sizes = [1, 40, 80, 160, 320, 640]
-cases = input('Choose the number of sample(s) – 1  40  80  160  320  640: ')
-cases = int(cases)
-
-while cases not in case_sizes:
-	print(cases, 'is an invalid option')
+"""
+ prompt_user()
+ 	- objective:		gather data aligned with user's request
+	- parameter:	 	none
+	- return:			DataFrame – filled with values randomly generated between 0 & 1
+"""
+def prompt_user():
+	population = 3200
+	case_sizes = [1, 40, 80, 160, 320, 640]
 	cases = input('Choose the number of sample(s) – 1  40  80  160  320  640: ')
 	cases = int(cases)
 
-samples = int(population / cases)
-print('\n')
+	while cases not in case_sizes:
+		print(cases, 'is an invalid option')
+		cases = input('Choose the number of sample(s) – 1  40  80  160  320  640: ')
+		cases = int(cases)
 
-# empty data frame to hold the data; each column is a case
-df = pd.DataFrame(data=None)
+	samples = int(population / cases)
+	print('\n')
 
-# fill the DataFrame with data
-# df.shape = [samples X cases]
-# each column is a sample case with the number of values equal to the ratio (population/cases)
-for i in range(0, cases):
-	temp = pd.Series(np.random.uniform(0, 1.0, samples))
-	col_name = 'Case ' + str(i+1)
-	df.insert(i, col_name, temp)
+	# empty data frame to hold the data; each column is a case
+	df = pd.DataFrame(data=None)
 
-print(df, '\n')
+	# fill the DataFrame with data;		df.shape = [samples X cases]
+	# each column is a sample case with the number of values equal to the ratio (population/cases)
+	for i in range(0, cases):
+		temp = pd.Series(np.random.uniform(0, 1.0, samples))
+		col_name = 'Case ' + str(i+1)
+		df.insert(i, col_name, temp)
+
+	print(df, '\n') # display np.random.uniform numbers (dtype is float64) by sample
+
+	return df
 
 
 """
  find_mean(data_frame)
  	- objective:		determine the mean of the chosen sample(s)
 	- parameter:	 	pandas DataFrame
-	- return:			none
+	- return:			Series – means & std. deviations
 """
-def find_mean(data_frame):
+def find_stats(df):
+	means = []
 	sample_num = len(df.columns)
 	sample_size = len(df)
 
 	print('number of sample(s):\t', sample_num, '\nsize of each sample:\t', sample_size)
 	print('\n')
 	
-	# loop through each sample and find the mean?
+	# loop through each sample and find its respective mean
 	for i in range(0, sample_num):
-		mean = round( df.iloc[0:, i].mean(), 3)
-		std_dev = round( df.iloc[0:, i].std(), 3)
-		print('sample number', i+1, '\tmean', mean, '\tstd. deviation', std_dev)
+		mean = round( df.iloc[0:, i].mean(), 3) # mean of sample size from generated random.uniform values
+		means.append(mean)
 
-find_mean(df)
+	if sample_num == 1:
+		# there is one sample & we need more than 1 value to calculate std_dev
+		# std_dev = round( df.iloc[0:, i].std(), 3) # old way to calculate std_dev for just 1 sample
+		std_dev = round( df.iloc[0:, i].mean().std(), 3)
+
+	else:
+		# calculates the std. deviation of each sample's mean
+		std_dev = round( stdev(means), 3)
+
+	return means, std_dev
 
 
+"""
+ find_mean(data_frame)
+ 	- objective:		display content of lists
+	- parameter:	 	pandas Series
+	- return:			none
+"""
+def display_stats(means, std_dev):
+	for i in range(0, len(means)):
+		print('\tsample number', i+1, '\tmean', means[i])
 
-# Visualize (plot) the chosen sample's mean
-'''
-low_bound = 0
-high_bound = 1
+	print('\n')
+	print('\t\t\t\tstd. deviation', std_dev)
+	print('\n\n')
 
-z1 = (low_bound - mean) / std_dev
-z2 = (high_bound - mean) / std_dev
 
-x = np.arange(z1, z2, 0.01) # range of x in spec
-x_all = np.arange(-1, 1, 0.01) # entire range of x, both in and out of spec
+"""
+ test()
+ 	- objective:		runs the program functions five separate times
+	- parameter:	 	none
+	- return:			none
+"""
+def test():
+	run_1 = prompt_user()
+	means_1, std_dev_1 = find_stats(run_1)
+	display_stats(means_1, std_dev_1)
 
-y = norm.pdf(x, 0, 1)
-y2 = norm.pdf(x_all, 0, 1)
+	run_2 = prompt_user()
+	means_2, std_dev_2 = find_stats(run_2)
+	display_stats(means_2, std_dev_2)
 
-fig, ax = plt.subplots( figsize=(9, 6) )
-plt.style.use('fivethirtyeight')
-ax.plot(x_all, y2)
+	run_3 = prompt_user()
+	means_3, std_dev_3 = find_stats(run_3)
+	display_stats(means_3, std_dev_3)
 
-ax.fill_between(x, y, 0, alpha=0.3, color='b')
-ax.fill_between(x_all, y2, 0, alpha=0.1)
-ax.set_xlim([-2, 2])
-ax.set_xlabel('# of Standard Deviations Outside the Mean')
-ax.set_yticklabels([])
-ax.set_title('Normal Gaussian Curve')
+	run_4 = prompt_user()
+	means_4, std_dev_4 = find_stats(run_4)
+	display_stats(means_4, std_dev_4)
 
-plt.savefig('normal_curve.png', dpi=72, bbox_inches='tight')
-plt.show()
-'''
+	run_5 = prompt_user()
+	means_5, std_dev_5 = find_stats(run_5)
+	display_stats(means_5, std_dev_5)
+
+	run_6 = prompt_user()
+	means_6, std_dev_6 = find_stats(run_6)
+	display_stats(means_6, std_dev_6)
+
+test()
+
+
