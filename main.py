@@ -1,7 +1,10 @@
 """
 Author: Jason Wherry	Start Date: 5/08/2020		To Run: python3 main.py
 
-What am I actually plotting?
+What am I actually plotting? --> The means calculated from each sample
+
+Next steps:
+	- Mess around with plotting parameters. Using plt.hist()
 
 """
 
@@ -44,7 +47,7 @@ def prompt_user():
 		col_name = 'Case ' + str(i+1)
 		df.insert(i, col_name, temp)
 
-	# print(df, '\n') # display np.random.uniform numbers (dtype is float64) by sample
+	print(df, '\n') # display np.random.uniform numbers (dtype is float64) by sample
 
 	return df
 
@@ -71,14 +74,32 @@ def find_stats(df):
 	if sample_num == 1:
 		# there is one sample & we need more than 1 value to calculate std_dev
 		# std_dev = round( df.iloc[0:, i].std(), 3) # old way to calculate std_dev for just 1 sample
+
 		mean_of_means = means[0]
 		std_dev = round( df.iloc[0:, i].mean().std(), 3)
 		skewness = round( df.iloc[0:, i].skew(), 3)
 		kurtosis = round( df.iloc[0:, i].kurtosis(), 3)
 
-	else:
-		# calculates the std. deviation of each sample's mean
+		# Turn array of means into a numpy array
 		numpy_means = np.array(means)
+
+		fig = plt.subplot()
+		fig.hist(numpy_means, bins=50, range=[0,1], histtype='bar')
+		fig.set_xlabel('Mean')
+		fig.set_ylabel('Frequency')
+		plt.show()
+
+
+	else:
+		# Turn array of means into a numpy array
+		numpy_means = np.array(means)
+
+		fig = plt.subplot()
+		fig.hist(numpy_means, bins=50, range=[0,1], histtype='bar')
+		fig.set_xlabel('Mean')
+		fig.set_ylabel('Frequency')
+		plt.show()
+
 		mean_of_means = round( numpy_means.mean(), 3)
 		std_dev = round( stdev(means), 3)
 		skewness = round( stats.skew(means), 3)
@@ -95,8 +116,8 @@ def find_stats(df):
 	- return:			none
 """
 def display_stats(means, mean_of_means, std_dev, skewness, kurtosis):
-	for i in range(0, len(means)):
-		print('\tsample number', i+1, '\tmean\t', means[i])
+	# for i in range(0, len(means)):
+	# 	print('\tsample number', i+1, '\tmean\t', means[i])
 
 	print('\n')
 	# print('\t\t\t\t|–––––––––––––––––––––––––––––––|')
@@ -117,7 +138,7 @@ def display_stats(means, mean_of_means, std_dev, skewness, kurtosis):
 	- return:			none
 """
 def test():
-	run_1 = prompt_user()
+	run_1 = prompt_user() # returns a data frame
 	means_1, mean_of_means_1, std_dev_1, skew_1, kurt_1 = find_stats(run_1)
 	display_stats(means_1, mean_of_means_1, std_dev_1, skew_1, kurt_1)
 
