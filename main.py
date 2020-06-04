@@ -4,8 +4,7 @@ Author: Jason Wherry	Start Date: 5/08/2020		To Run: python3 main.py
 What am I actually plotting? --> The means calculated from each sample
 
 Next steps:
-	- Mess around with plotting parameters. Using plt.hist()
-
+	- Create a Menu for the user
 """
 
 import numpy as np
@@ -25,16 +24,22 @@ import scipy.stats as stats
 """
 def prompt_user():
 	population = 3200
-	case_sizes = [1, 40, 80, 160, 320, 640]
-	cases = input('Choose the number of sample(s) – 1  40  80  160  320  640: ')
-	cases = int(cases)
+	case_sizes = ['1', '40', '80', '160', '320', '640']
+	cases = input('Enter \'q\' to quit\nChoose the number of sample(s) – 1  40  80  160  320  640: ')
+
+	# check input to stop code execution
+	if cases == 'q' or cases == 'Q':
+		exit()
 
 	while cases not in case_sizes:
 		print(cases, 'is an invalid option')
-		cases = input('Choose the number of sample(s) – 1  40  80  160  320  640: ')
-		cases = int(cases)
+		cases = input('\nEnter \'q\' to quit\nChoose the number of sample(s) – 1  40  80  160  320  640: ')
+		
+		# check input to stop code execution
+		if cases == 'q' or cases == 'Q':
+			exit()
 
-	samples = int(population / cases)
+	samples = int(population / int(cases) )
 	print('\n')
 
 	# empty data frame to hold the data; each column is a case
@@ -42,7 +47,7 @@ def prompt_user():
 
 	# fill the DataFrame with data;		df.shape = [samples X cases]
 	# each column is a sample case with the number of values equal to the ratio (population/cases)
-	for i in range(0, cases):
+	for i in range(0, int(cases) ):
 		temp = pd.Series(np.random.uniform(0, 1.0, samples))
 		col_name = 'Case ' + str(i+1)
 		df.insert(i, col_name, temp)
@@ -133,35 +138,20 @@ def display_stats(means, mean_of_means, std_dev, skewness, kurtosis):
 
 """
  test()
- 	- objective:		runs the program functions five separate times
+ 	- objective:		runs the program functions
 	- parameter:	 	none
 	- return:			none
 """
 def test():
-	run_1 = prompt_user() # returns a data frame
-	means_1, mean_of_means_1, std_dev_1, skew_1, kurt_1 = find_stats(run_1)
-	display_stats(means_1, mean_of_means_1, std_dev_1, skew_1, kurt_1)
+	run = prompt_user() # returns a data frame
+	means, mean_of_means, std_dev, skew, kurt = find_stats(run)
+	display_stats(means, mean_of_means, std_dev, skew, kurt)
 
-	run_2 = prompt_user()
-	means_2, mean_of_means_2, std_dev_2, skew_2, kurt_2 = find_stats(run_2)
-	display_stats(means_2, mean_of_means_2, std_dev_2, skew_2, kurt_2)
 
-	run_3 = prompt_user()
-	means_3, mean_of_means_3, std_dev_3, skew_3, kurt_3 = find_stats(run_3)
-	display_stats(means_3, mean_of_means_3, std_dev_3, skew_3, kurt_3)
-
-	run_4 = prompt_user()
-	means_4, mean_of_means_4, std_dev_4, skew_4, kurt_4 = find_stats(run_4)
-	display_stats(means_4, mean_of_means_4, std_dev_4, skew_4, kurt_4)
-
-	run_5 = prompt_user()
-	means_5, mean_of_means_5, std_dev_5, skew_5, kurt_5 = find_stats(run_5)
-	display_stats(means_5, mean_of_means_5, std_dev_5, skew_5, kurt_5)
-
-	run_6 = prompt_user()
-	means_6, mean_of_means_6, std_dev_6, skew_6, kurt_6 = find_stats(run_6)
-	display_stats(means_6, mean_of_means_6, std_dev_6, skew_6, kurt_6)
-
-test()
-
+test() # run 1
+test() # run 2
+test() # run 3
+test() # run 4
+test() # run 5
+test() # run 6
 
