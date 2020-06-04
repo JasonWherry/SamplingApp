@@ -11,6 +11,6 @@
 
 ***
 
-- The next stop is to visualize (plot) the chosen sample's mean. Below is a suggestion as to what it could look like.
+Below is a suggestion as to what a visualization of the samples could look like in App form. This helps to set a big-picture goal. 
 
 ![visual](plot_visual.png)
