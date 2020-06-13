@@ -3,8 +3,14 @@ Author: Jason Wherry	Start Date: 5/08/2020		To Run: python3 main.py
 
 What am I actually plotting? --> The means calculated from each sample
 
-Next steps:
-	- plot population without a means of means
+Ideas:
+  - Add the following to menu option #1 (to educate the user)
+	- make a histogram of the population without the means; plot just the raw scores
+	- include pictures of the distributions
+	- provide a real world example for each distribution; Explain how they're applicable
+
+  - Add the following to menu option #2
+	- plot the mean of means in realtime; Show the user how samples build from 1 case up to 640 cases
 """
 
 import numpy as np
