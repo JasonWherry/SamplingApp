@@ -4,7 +4,7 @@ Author: Jason Wherry	Start Date: 5/08/2020		To Run: python3 main.py
 What am I actually plotting? --> The means calculated from each sample
 
 Next steps:
-	- Add on to educate()
+	- plot population without a means of means
 """
 
 import numpy as np
@@ -88,7 +88,8 @@ def prompt_user(distribution):
 
 	elif distribution == 'Binomial':
 		for i in range(0, int(cases) ):
-			temp = pd.Series(np.random.binomial(1, 0.5, samples)) # flip a coin 1 time, tested samples times
+			# temp = pd.Series(np.random.binomial(1, 0.5, samples)) # flip a coin 1 time, tested samples times
+			temp = pd.Series(np.random.binomial(1, 0.8, samples)) # flip a coin 1 time, tested samples times
 			col_name = 'Case ' + str(i+1)
 			df.insert(i, col_name, temp)
 
@@ -114,7 +115,7 @@ def find_stats(df, dist_type):
 	means = []
 	sample_num = len(df.columns) 	# AKA cases
 	sample_size = len(df)			# AKA samples per case
-	dist_type = dist_type + ' Distribution - ' + str(sample_num) + ' Samples that observe ' + str(sample_size) + ' numbers'
+	dist_type = dist_type + ' Distribution - ' + str(sample_num) + ' Cases that sample ' + str(sample_size) + ' numbers'
 
 	print('number of cases:\t', sample_num, '\nsamples per case:\t', sample_size)
 	print('\n')
@@ -130,6 +131,7 @@ def find_stats(df, dist_type):
 
 		mean_of_means = means[0]
 		std_dev = round( df.iloc[0:, i].mean().std(), 3)
+		variance = round( df.iloc[0:, i].mean().var(), 3)
 		skewness = round( df.iloc[0:, i].skew(), 3)
 		kurtosis = round( df.iloc[0:, i].kurtosis(), 3)
 
@@ -156,12 +158,13 @@ def find_stats(df, dist_type):
 		plt.show()
 
 		mean_of_means = round( numpy_means.mean(), 3)
+		variance_ = round( stats.tvar(means), 3)
 		std_dev = round( stdev(means), 3)
 		skewness = round( stats.skew(means), 3)
 		kurtosis = round( stats.kurtosis(means), 3)
 
 
-	return means, mean_of_means, std_dev, skewness, kurtosis
+	return means, mean_of_means, variance_, std_dev, skewness, kurtosis
 
 
 """
@@ -170,7 +173,7 @@ def find_stats(df, dist_type):
 	- parameter:	 	pandas Series
 	- return:			None
 """
-def display_stats(means, mean_of_means, std_dev, skewness, kurtosis):
+def display_stats(means, mean_of_means, variance, std_dev, skewness, kurtosis):
 	# for i in range(0, len(means)):
 	# 	print('\tsample number', i+1, '\tmean\t', means[i])
 
@@ -178,6 +181,7 @@ def display_stats(means, mean_of_means, std_dev, skewness, kurtosis):
 	# print('\t\t\t\t|–––––––––––––––––––––––––––––––|')
 	print('\t\t\t|–––––––––––––––––––––––|')
 	print('\t\t\t  mean of means ', mean_of_means)
+	print('\t\t\t  variance\t', variance)
 	print('\t\t\t  std. deviation', std_dev)
 	print('\t\t\t  skewness\t', skewness)
 	print('\t\t\t  kurtosis\t', kurtosis)
@@ -195,8 +199,8 @@ def display_stats(means, mean_of_means, std_dev, skewness, kurtosis):
 def test(num_runs, dist):
 	while num_runs > 0:
 		run, dist = prompt_user(dist) # returns a data frame
-		means, mean_of_means, std_dev, skew, kurt = find_stats(run, dist)
-		display_stats(means, mean_of_means, std_dev, skew, kurt)
+		means, mean_of_means, variance, std_dev, skew, kurt = find_stats(run, dist)
+		display_stats(means, mean_of_means, variance, std_dev, skew, kurt)
 
 		num_runs -= 1
 
