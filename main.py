@@ -93,11 +93,29 @@ def prompt_user(distribution):
 		# # Not working at the moment
 
 	elif distribution == 'Binomial':
+		Resp = False
+		valid = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+		while not Resp:
+			prob = input('Note: hit \'enter\' for default 50-50 chance\nChoose the probablity as a percentage, i.e. 0, 30, 70: ')
+			print('prob  ', prob)
+			if prob == '':
+				probNum = 0.5
+				Resp = True
+			elif prob[:2] in valid: # 100% == 10 in valid
+				probNum = int(prob[:2])/10.0
+				Resp = True
+			elif prob[0] in valid:
+				probNum = int(prob[0])/10.0
+				Resp = True
+			
+
 		for i in range(0, int(cases) ):
 			# temp = pd.Series(np.random.binomial(1, 0.5, samples)) # flip a coin 1 time, tested samples times
-			temp = pd.Series(np.random.binomial(1, 0.8, samples)) # flip a coin 1 time, tested samples times
+			temp = pd.Series(np.random.binomial(1, probNum, samples)) # flip a coin 1 time, tested samples times
 			col_name = 'Case ' + str(i+1)
 			df.insert(i, col_name, temp)
+
+		return df, distribution, probNum
 
 	elif distribution == 'Normal':
 		for i in range(0, int(cases) ):
@@ -108,7 +126,7 @@ def prompt_user(distribution):
 	print(df, '\n') # display np.random.uniform numbers (dtype is float64) by sample
 	# print(df.shape)
 
-	return df, distribution
+	return df, distribution, None
 
 
 """
@@ -117,7 +135,7 @@ def prompt_user(distribution):
 	- parameter:	 	pandas DataFrame, type of distribution
 	- return:			Series – means & std. deviations
 """
-def find_stats(df, dist_type):
+def find_stats(df, dist_type, probNum = None):
 	means = []
 	sample_num = len(df.columns) 	# AKA cases
 	sample_size = len(df)			# AKA samples per case
@@ -125,10 +143,13 @@ def find_stats(df, dist_type):
 
 	print('number of cases:\t', sample_num, '\nsamples per case:\t', sample_size)
 	print('\n')
+	if probNum:
+		temp = str(probNum*100) + '%'
+		print('Probablity of Binomial distribution:\t', temp)
 	
 	# loop through each sample and find its respective mean
 	for i in range(0, sample_num):
-		mean = round( df.iloc[0:, i].mean(), 3) # mean of sample size from generated random.uniform values
+		mean = round( df.iloc[0:, i].mean(), 3) # mean of sample size from generated random values
 		means.append(mean)
 
 	if sample_num == 1:
@@ -150,7 +171,8 @@ def find_stats(df, dist_type):
 		fig.set_ylabel('Value Frequency')
 		fig.set_title(dist_type)
 		plt.show()
-
+		
+		return means, mean_of_means, variance, std_dev, skewness, kurtosis
 
 	else:
 		# Turn array of means into a numpy array
@@ -164,13 +186,13 @@ def find_stats(df, dist_type):
 		plt.show()
 
 		mean_of_means = round( numpy_means.mean(), 3)
-		variance_ = round( stats.tvar(means), 3)
+		variance = round( stats.tvar(means), 3)
 		std_dev = round( stdev(means), 3)
 		skewness = round( stats.skew(means), 3)
 		kurtosis = round( stats.kurtosis(means), 3)
 
 
-	return means, mean_of_means, variance_, std_dev, skewness, kurtosis
+		return means, mean_of_means, variance, std_dev, skewness, kurtosis
 
 
 """
@@ -204,8 +226,8 @@ def display_stats(means, mean_of_means, variance, std_dev, skewness, kurtosis):
 """
 def test(num_runs, dist):
 	while num_runs > 0:
-		run, dist = prompt_user(dist) # returns a data frame
-		means, mean_of_means, variance, std_dev, skew, kurt = find_stats(run, dist)
+		run, dist, Prob = prompt_user(dist) # returns a data frame
+		means, mean_of_means, variance, std_dev, skew, kurt = find_stats(run, dist, Prob)
 		display_stats(means, mean_of_means, variance, std_dev, skew, kurt)
 
 		num_runs -= 1
@@ -251,31 +273,42 @@ def menu():
 		educate()
 		menu() # display menu again
 	elif user_input == '2':
-		print('\n Select a distribution type')
-		print('\t1 : Uniform')
-		# print('\t2 : Bernoulli')
-		print('\t2 : Binomial')
-		print('\t3 : Normal')
-		
+		Resp = False
+		valid = ['1', '2', '3']
+		counter = 0
+		while not Resp:
+			if counter > 4:
+				print('Incorrect Input for \'distribution type\' : Program execution terminated')
+				exit()
+			print('\n Select a distribution type')
+			print('\t1 : Uniform')
+			# print('\t2 : Bernoulli')
+			print('\t2 : Binomial')
+			print('\t3 : Normal')
+			
+			dist_type = input('\n  Enter one of the following options: \'1\', \'2\', \'3\': ')
 
-		dist_type = input('\n  Enter one of the following options: \'1\', \'2\', \'3\': ')
-		
+			if dist_type not in valid:
+				counter += 1
+				Resp = False
 
+			elif dist_type == '1':
+				test(1, 'Uniform')
+				Resp = True
+			# elif dist_type == '2':
+			# 	test(1, 'Bernoulli')
+			elif dist_type == '2':	
+				test(1, 'Binomial')
+				Resp = True
+			elif dist_type == '3':
+				test(1, 'Normal')
+				Resp = True
 
-		if dist_type == '1':
-			test(1, 'Uniform')
-		# elif dist_type == '2':
-		# 	test(1, 'Bernoulli')
-		elif dist_type == '2':	
-			test(1, 'Binomial')
-		elif dist_type == '3':
-			test(1, 'Normal')
-		
+			# menu() # display menu again
 
-		menu() # display menu again
 	elif user_input == '3':
 		exit()
-	
+
 
 menu()
 
