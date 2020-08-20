@@ -4,6 +4,8 @@ Author: Jason Wherry	Start Date: 5/08/2020		To Run: python3 main.py
 What am I actually plotting? --> The means calculated from each sample
 
 Ideas:
+  - Add tests to unit_tests.py to test the functions
+
   - Add the following to menu option #1 (to educate the user)
 	- make a histogram of the population without the means; plot just the raw scores
 	- include pictures of the distributions
