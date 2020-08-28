@@ -244,14 +244,40 @@ educate()
 	- return:			User's request
 """
 def educate():
+	# Violating the principle: DNRY ~ Do Not Repeat Yourself
+
 	print('A Uniform distribution...')
+
+	# generate histogram of the raw scores
+	unifVals = pd.Series(np.random.uniform(0, 1.0, 3200))
+	normVals = pd.Series(np.random.normal(0.5, 0.1, 3200))
+	binVals = pd.Series(np.random.binomial(1, 0.5, 3200))
+
+	uniFig = plt.subplot()
+	uniFig.hist(unifVals, bins=50, range=[0,1], histtype='bar')
+	uniFig.set_xlabel('Mean (Value)')
+	uniFig.set_ylabel('Value Frequency')
+	uniFig.set_title('Uniform Raw Scores')
+	plt.show()
 
 	# print('A Bernoulli distribution...')
 
 	print('A Normal distribution...')
+	normFig = plt.subplot()
+	normFig.hist(normVals, bins=50, range=[0,1], histtype='bar')
+	normFig.set_xlabel('Mean (Value)')
+	normFig.set_ylabel('Value Frequency')
+	normFig.set_title('Normal Raw Scores')
+	plt.show()
+
 
 	print('A Binomial distribution...')
-
+	binFig = plt.subplot()
+	binFig.hist(binVals, bins=50, range=[0,1], histtype='bar')
+	binFig.set_xlabel('Mean (Value)')
+	binFig.set_ylabel('Value Frequency')
+	binFig.set_title('Binomial Raw Scores')
+	plt.show()
 
 """
  menu()
@@ -313,8 +339,4 @@ def menu():
 
 
 menu()
-
-
-
-
 
