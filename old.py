@@ -341,5 +341,5 @@ def menu(test_input=''):
 		exit()
 
 
-# menu()
+menu()
 

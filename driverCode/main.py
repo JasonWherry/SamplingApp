@@ -285,16 +285,13 @@ def educate():
 	- parameter:		None
 	- return:			User's request
 """
-def menu(test_input=''):
+def menu():
 	print('\n  Menu')
 	print('\t1 : distributions -> lists alternative distribution choices')
 	print('\t2 : demonstration -> demonstrates the Central Limit Theorem with random sampling')
 	print('\t3 : quit -> terminates program execution')
 
-	if test_input:
-		user_input = test_input
-	else:
-		user_input = input('\n  Enter one of the following options: \'1\', \'2\', \'3\': ')
+	user_input = input('\n  Enter one of the following options: \'1\', \'2\', \'3\': ')
 
 	# print(user_input)
 	print('\n')
@@ -338,8 +335,9 @@ def menu(test_input=''):
 			# menu() # display menu again
 
 	elif user_input == '3':
-		exit()
+		return(exit('quit'))
+		# exit()
 
 
-# menu()
+menu()
 
